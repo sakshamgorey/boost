@@ -138,3 +138,31 @@ test('should register only in local environment', function (): void {
 
     expect($tool->eligibleForRegistration())->toBeTrue();
 });
+
+test('it respects timeout', function (): void {
+    $tool = new Tinker;
+
+    $response = $tool->handle(new Request([
+        'code' => 'return "ok";',
+        'timeout' => 1,
+    ]));
+
+    expect($response)->isToolResult()
+        ->toolJsonContentToMatchArray([
+            'result' => 'ok',
+        ]);
+});
+
+test('it caps timeout', function (): void {
+    $tool = new Tinker;
+
+    $response = $tool->handle(new Request([
+        'code' => 'return "ok";',
+        'timeout' => 999999,
+    ]));
+
+    expect($response)->isToolResult()
+        ->toolJsonContentToMatchArray([
+            'result' => 'ok',
+        ]);
+});
