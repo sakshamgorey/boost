@@ -44,8 +44,13 @@ class Tinker extends Tool
     public function handle(Request $request): Response
     {
         $code = str_replace(['<?php', '?>'], '', (string) $request->get('code'));
+        $timeout = (int) $request->get('timeout', 180);
+
+        // Cap timeout at 300 seconds to prevent resource exhaustion.
+        $timeout = min($timeout, 300);
 
         ini_set('memory_limit', '256M');
+        set_time_limit($timeout);
 
         ob_start();
 

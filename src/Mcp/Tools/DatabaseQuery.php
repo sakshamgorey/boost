@@ -43,7 +43,11 @@ class DatabaseQuery extends Tool
     public function handle(Request $request): Response
     {
         $query = trim((string) $request->string('query'));
-        $token = strtok(ltrim($query), " \t\n\r");
+
+        // Remove leading comments to find the first command word safely.
+        $queryWithoutLeadingComments = preg_replace('/^(\s*(--.*|#.*|\/\*[\s\S]*?\*\/)\s*)*/', '', $query);
+
+        $token = strtok(ltrim($queryWithoutLeadingComments), " \t\n\r");
         if (! $token) {
             return Response::error('Please pass a valid query');
         }
