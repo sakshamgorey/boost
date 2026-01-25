@@ -119,6 +119,7 @@ it('adds prefix to tables when tables parameter is provided', function (): void 
         // Verify the query has the prefix
         expect($query)->toContain('arpg_users');
         expect($query)->not->toContain(' FROM users');
+
         return [];
     });
 
@@ -141,6 +142,7 @@ it('handles multiple tables with prefix', function (): void {
     $mockConnection->shouldReceive('select')->andReturnUsing(function ($query) {
         expect($query)->toContain('arpg_users');
         expect($query)->toContain('arpg_posts');
+
         return [];
     });
 
@@ -163,6 +165,7 @@ it('handles quoted table names with prefix', function (): void {
     $mockConnection->shouldReceive('select')->andReturnUsing(function ($query) {
         expect($query)->toContain('`arpg_users`');
         expect($query)->toContain('"arpg_posts"');
+
         return [];
     });
 
@@ -186,6 +189,7 @@ it('does not add prefix when tables parameter is not provided', function (): voi
         // Verify the query does NOT have the prefix
         expect($query)->toContain('users');
         expect($query)->not->toContain('arpg_users');
+
         return [];
     });
 
@@ -211,6 +215,7 @@ it('only prefixes exact table name matches and not substrings', function (): voi
         expect($query)->toContain('arpg_comments_users');
         // Verify word boundaries work - 'users' inside 'users_post' doesn't create double prefix
         expect($query)->not->toContain('arpg_arpg_users_post');
+
         return [];
     });
 
@@ -236,6 +241,7 @@ it('prefixes table-qualified column references correctly', function (): void {
         // users.id should become arpg_users.id
         expect($query)->toContain('arpg_users.id');
         expect($query)->toContain('arpg_posts.user_id');
+
         return [];
     });
 
@@ -258,6 +264,7 @@ it('does not prefix table names inside string literals', function (): void {
         expect($query)->toContain('FROM arpg_status');
         expect($query)->toContain("= 'status'");  // string should be unchanged!
         expect($query)->not->toContain("'arpg_status'");
+
         return [];
     });
 
@@ -279,6 +286,7 @@ it('prefixes table names but not aliases', function (): void {
     $mockConnection->shouldReceive('select')->andReturnUsing(function ($query) {
         expect($query)->toContain('FROM arpg_users AS u');
         expect($query)->toContain('u.id');  // alias should NOT be prefixed
+
         return [];
     });
 
@@ -301,6 +309,7 @@ it('does not add prefix when tables array is empty', function (): void {
         // Verify the query does NOT have the prefix
         expect($query)->toContain('users');
         expect($query)->not->toContain('arpg_users');
+
         return [];
     });
 
@@ -324,6 +333,7 @@ it('skips prefixing when table name already starts with prefix', function (): vo
         // Should not double-prefix
         expect($query)->toContain('arpg_users');
         expect($query)->not->toContain('arpg_arpg_users');
+
         return [];
     });
 
@@ -351,6 +361,7 @@ it('handles schema-qualified table names with prefix', function (): void {
         expect($query)->toContain('app_posts');
         // Schema prefix should remain
         expect($query)->toContain('public.');
+
         return [];
     });
 
@@ -378,6 +389,7 @@ it('handles complex escape sequences in string literals', function (): void {
         expect($query)->toContain("= 'status'");
         // Should not prefix table name inside string
         expect($query)->not->toContain("'arpg_status'");
+
         return [];
     });
 

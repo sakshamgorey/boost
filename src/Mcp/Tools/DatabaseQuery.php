@@ -117,6 +117,7 @@ class DatabaseQuery extends Tool
 
             // Replace unquoted names, avoiding string literals
             $parts = preg_split("/('(?:[^'\\\\]|\\\\.)*')/", $query, -1, PREG_SPLIT_DELIM_CAPTURE);
+
             for ($i = 0; $i < count($parts); $i += 2) {
                 $parts[$i] = preg_replace("/\b{$escaped}\b/", $prefixed, $parts[$i] ?? '');
             }
