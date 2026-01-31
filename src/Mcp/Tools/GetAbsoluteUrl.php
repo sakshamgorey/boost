@@ -10,6 +10,7 @@ use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 use Laravel\Mcp\Server\Tool;
 use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
+use Throwable;
 
 #[IsReadOnly]
 class GetAbsoluteUrl extends Tool
@@ -47,7 +48,11 @@ class GetAbsoluteUrl extends Tool
         }
 
         if ($routeName) {
-            return Response::text(route($routeName));
+            try {
+                return Response::text(route($routeName));
+            } catch (Throwable $e) {
+                return Response::error("Failed to generate URL for route '{$routeName}': {$e->getMessage()}");
+            }
         }
 
         return Response::text(url('/'));

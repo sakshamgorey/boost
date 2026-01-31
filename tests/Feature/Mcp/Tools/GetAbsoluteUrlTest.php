@@ -55,3 +55,12 @@ test('it handles empty path', function (): void {
         ->toolHasNoError()
         ->toolTextContains('http://localhost');
 });
+
+test('it returns error when named route does not exist', function (): void {
+    $tool = new GetAbsoluteUrl;
+    $response = $tool->handle(new Request(['route' => 'non-existent-route']));
+
+    expect($response)
+        ->toolHasError()
+        ->toolTextContains("Failed to generate URL for route 'non-existent-route': Route [non-existent-route] not defined.");
+});
